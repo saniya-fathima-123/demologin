@@ -2,14 +2,14 @@ import mongoose, {Schema} from 'mongoose'
 import type { Document } from 'mongoose';
 
 export interface IUser extends Document {
-  name: string,
-  email: string,
-  phone: string
+  cityname: string,
+  citycode: string
+  
 }
 
 const UserSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true }
+  cityName: { type: String, required: true },
+  cityCode: { type: String, required: true }
 })
 
-export default mongoose.model<IUser>('User', UserSchema)
+export default mongoose.model<IUser>('city', UserSchema)

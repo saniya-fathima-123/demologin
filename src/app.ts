@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Application } from 'express';
 import mongoose from 'mongoose';
-import router from './routes/userRoutes.js';
+import router from './routes/userRoutes';
 
 class App {
   public app: Application;
@@ -26,7 +26,7 @@ class App {
   }
 
   private routes (): void {
-    this.app.use('/users', router)
+    this.app.use('/users',router)
   }
 
   private async connectToDatabase (): Promise<void> {
