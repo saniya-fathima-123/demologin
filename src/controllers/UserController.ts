@@ -2,6 +2,14 @@ import type { Request, Response } from 'express'
 import city from "../models/User"
 import mongoose from 'mongoose'
 
+import type { Request, Response } from "express";
+// import User from "../models/User";
+import { UserModel } from "../models/User";
+import { OtpModel } from "../models/User";
+import { generate } from "otp-generator";
+import axios from "axios";
+
+
 class UserController {
   async getUsers (req: Request, res: Response): Promise<void> {
     try {

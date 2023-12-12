@@ -1,7 +1,7 @@
-import { Router } from 'express'
-import userController from '../controllers/UserController.js'
+import { Router } from "express";
+import userController from "../controllers/UserController.js";
 
-const router: Router = Router()
+const router: Router = Router();
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/', userController.getUsers)
