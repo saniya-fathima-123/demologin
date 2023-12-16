@@ -34,8 +34,7 @@
 // });
 
 // export const mongoose.model<IOtp>("otp", OtpSchema);
-
-import mongoose, { Schema, Document, Model, model } from "mongoose";
+import { Schema, Document, model, Model } from "mongoose";
 
 export interface IUser extends Document {
   cityname: string,
@@ -48,4 +47,22 @@ const UserSchema: Schema = new Schema({
   cityCode: { type: String, required: true }
 })
 
-export default mongoose.model<IUser>('city', UserSchema)
+
+
+export interface ICategory extends Document {
+   categoryName: string;
+    
+}
+
+const CategorySchema: Schema = new Schema({
+  categoryName:{type: String,required:true}
+
+})
+
+// Create and export User model
+export const UserModel: Model<IUser> = model<IUser>("city", UserSchema);
+
+// Create and export Category model
+export const CategoryModel: Model<ICategory> = model<ICategory>("category", CategorySchema);
+
+

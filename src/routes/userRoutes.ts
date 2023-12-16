@@ -8,4 +8,8 @@ router.get('/', userController.getUsers)
 router.get('/hello', userController.getUsers)
 router.post('/addCity',userController.postCity)
 router.delete('/deleteCity',userController.deleteCity)
+router.post('/addcategory',userController.addcategory)
+router.delete('/deleteCategory',userController.deleteCategory)
+
+
 export default router
