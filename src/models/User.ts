@@ -37,8 +37,8 @@
 import { Schema, Document, model, Model } from "mongoose";
 
 export interface IUser extends Document {
-  cityname: string,
-  citycode: string
+  cityName: string,
+  cityCode: string
   
 }
 

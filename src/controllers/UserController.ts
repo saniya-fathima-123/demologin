@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import { UserModel } from "../models/User"
 import { CategoryModel} from "../models/User"
 import mongoose from 'mongoose'
+import { log } from 'console'
 
 class UserController {
   async getUsers (req: Request, res: Response): Promise<void> {
@@ -44,6 +45,22 @@ class UserController {
     }catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
+
+}
+
+async getCity(req: Request, res: Response): Promise<void> {
+
+  try {
+    // Find all cities in the database
+    const cities = await UserModel.find({}, { _id: 0, cityName: 1 });
+    console.log('Cities:', cities);
+    const cityNames = cities.map(city => city.cityName);
+    console.log(cityNames);
+    
+    res.json(cityNames);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 
 }
 
@@ -110,6 +127,23 @@ async addcategory(req: Request, res: Response): Promise<void> {
 
 }
 
+async getcategory(req: Request, res: Response): Promise<void>{
+  try {
+    // Find all categories in the database
+    const categories = await CategoryModel.find({}, { _id: 0, categoryName: 1 });
+
+    // Extract category names from the array of objects
+    const categoryNames = categories.map(category => category.categoryName);
+    
+
+    res.json(categoryNames);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+}
+
 async deleteCategory(req: Request, res: Response): Promise<void> {
   try {
     const { id } = req.body;
@@ -138,24 +172,45 @@ async deleteCategory(req: Request, res: Response): Promise<void> {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+async updateCategory(req: Request, res: Response): Promise<void>{
 
-async updateCategory(req: Request, res: Response): Promise<void> {
+  try {
+    const { id, newName } = req.body;
 
-  const newName: string = req.body.newName;
+    // Validate if id and newName are present
+    if (!id || !newName) {
+      res.status(400).json({ error: 'Both id and new category name are required.' });
+      return;
+    }
 
-if (!newName) {
-  res.status(400).json({ error: 'New name is required' });
-  return;
+    // Find the category by ID
+    const existingCategory = await CategoryModel.findById(id);
+
+    if (!existingCategory) {
+      res.status(404).json({ error: 'Category not found.' });
+      return;
+    }
+
+    // Check if the new name is the same as the existing name
+    if (existingCategory.categoryName === newName) {
+      res.json({ message: 'New category name is the same as the existing name. No update needed.' });
+      return;
+    }
+
+    // Update the category name
+    const updatedCategory = await CategoryModel.findByIdAndUpdate(
+      id,
+      { categoryName: newName },
+      { new: true } // Return the updated document
+    );
+
+    res.json({ message: 'Category updated successfully.', updatedCategory });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 }
 
-// Update the name
-let personName = newName;
-
-res.json({ message: 'Name updated successfully', newName: personName });
-res.json({ currentName: personName });
-return;
-
-}
 }
 
 export default new UserController()
