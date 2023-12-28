@@ -1,18 +1,17 @@
-import { Router } from "express";
-import userController from "../controllers/UserController.js";
+import { Router } from 'express';
+import { validate } from '../middleware/ValidationMiddleware.js';
+import { createUserSchema } from '../schemas/UserControllerSchema.js';
+import userController from '../controllers/UserController';
+import CategoryController from '../controllers/CategoryController.js';
 
-const router: Router = Router();
+const userRouter: Router = Router();
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/', userController.getUsers)
-router.get('/hello', userController.getUsers)
-router.post('/addCity',userController.postCity)
-router.delete('/deleteCity',userController.deleteCity)
-router.get('/viewCity',userController.getCity)
-router.post('/addcategory',userController.addcategory)
-router.get('/viewcategory',userController.getcategory)
-router.put('/updateCategory',userController.updateCategory)
-router.delete('/deleteCategory',userController.deleteCategory)
+userRouter.get('/', userController.getUsers);
+userRouter.post('/register', validate(createUserSchema), userController.create); // POST request for creating a user registration
+userRouter.get('/viewcategory', CategoryController.getCategory);
+// userRouter.post('/create-session', userController.otpgenerate);
+userRouter.post('/validate', userController.verifyOtp);
 
 
-export default router
+export default userRouter;

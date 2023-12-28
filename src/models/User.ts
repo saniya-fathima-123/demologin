@@ -34,35 +34,50 @@
 // });
 
 // export const mongoose.model<IOtp>("otp", OtpSchema);
-import { Schema, Document, model, Model } from "mongoose";
 
-export interface IUser extends Document {
-  cityName: string,
-  cityCode: string
-  
+import mongoose from 'mongoose';
+import type { Schema, Document, Model } from 'mongoose';
+
+export interface UserDraft extends Document {
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNumber: string;
+  role?: USER_ROLE;
+  status?: USER_STATUS;
 }
 
-const UserSchema: Schema = new Schema({
-  cityName: { type: String, required: true },
-  cityCode: { type: String, required: true }
-})
-
-
-
-export interface ICategory extends Document {
-   categoryName: string;
-    
+export enum USER_ROLE {
+  ADMIN = 'Admin',
+  DRIVER = 'Driver',
+  OPERATOR = 'Operator',
 }
 
-const CategorySchema: Schema = new Schema({
-  categoryName:{type: String,required:true}
+export enum USER_STATUS {
+  ACTIVE = 'Active',
+  INACTIVE = 'InActive',
+}
+const UserSchema: Schema = new mongoose.Schema<UserDraft>(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    mobileNumber: { type: String, required: true },
+    role: {
+      type: String,
+      required: true,
+      enum: [USER_ROLE.ADMIN, USER_ROLE.DRIVER, USER_ROLE.OPERATOR],
+      default: USER_ROLE.OPERATOR,
+    },
+    status: { type: String, required: true, enum: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE], default: USER_STATUS.INACTIVE },
+  },
+  { timestamps: true }
+);
 
-})
+export interface UserDocument extends UserDraft, Document {}
 
-// Create and export User model
-export const UserModel: Model<IUser> = model<IUser>("city", UserSchema);
+interface UserModel extends Model<UserDocument> {
+  // Define static or instance methods for the model
+}
 
-// Create and export Category model
-export const CategoryModel: Model<ICategory> = model<ICategory>("category", CategorySchema);
-
-
+export const User = mongoose.model<UserDraft, UserModel>('User', UserSchema); // Assign the result to UserModel
