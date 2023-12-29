@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
+    "rootDir": "src",
     "baseUrl": ".",
     "strictNullChecks": true,
     "paths": {
@@ -19,7 +20,5 @@
     "experimentalSpecifierResolution": "node"
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
