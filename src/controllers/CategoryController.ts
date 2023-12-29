@@ -2,7 +2,6 @@ import type { Request, Response } from 'express';
 import CategoryService from '../services/Category.service';
 import { Category } from '../models/Category';
 import { createCategorySchema } from '../schemas/CategorySchema';
-import Joi from 'joi';
 import { validate } from '../middleware/ValidationMiddleware';
 
 class CategoryController {
@@ -27,6 +26,32 @@ class CategoryController {
           }
     
         }
+
+    deleteCategory = async (req: Request, res: Response): Promise<void> => {
+          const { id } = req.body;
+      
+          try {
+            await CategoryService.deleteCategory(id);
+            res.json({ message: 'Category deleted successfully.' });
+          } catch (error) {
+            res.status(500).json({ error: error.message });
+          }
+        };
+
+    updateCategory = async (req: Request, res: Response): Promise<void> => {
+          const { id, categoryName } = req.body;
+          console.log(id);
+          
+      
+          try {
+            const result = await CategoryService.updateCategory(id, categoryName);
+            res.json(result);
+          } catch (error) {
+            res.status(500).json({ error: error.message });
+          }
+        }
+
+
       }
 
   
