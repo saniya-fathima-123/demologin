@@ -12,15 +12,13 @@ class UserController {
     }
   }
 
-  create = () => {
-    return async (req: Request, res: Response): Promise<void> => {
-      try {
-        const user = await UserService.createUser(req.body);
-        res.status(201).json(user);
-      } catch (error) {
-        res.status(400).send(error);
-      }
-    };
+  create = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const user = await UserService.createUser(req.body);
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(400).send(error);
+    }
   };
 
   async createSession(req: Request, res: Response): Promise<void> {

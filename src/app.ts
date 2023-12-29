@@ -1,6 +1,8 @@
 import express from 'express';
 import type { Application } from 'express';
 import mongoose from 'mongoose';
+import cityRouter from './routes/cityRoutes.js';
+import categoryRouter from './routes/categoryRoutes.js';
 import userRouter from './routes/userRoutes.js';
 
 class App {
@@ -28,6 +30,8 @@ class App {
   }
 
   private routes(): void {
+    this.app.use('/api/v1/category', categoryRouter);
+    this.app.use('/api/v1/city', cityRouter);
     this.app.use('/api/v1/users', userRouter);
     // this.app.use('/user', router);
     // this.app.use('/user/login', router);
