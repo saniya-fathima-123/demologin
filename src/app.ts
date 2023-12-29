@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Application } from 'express';
 import mongoose from 'mongoose';
-import cityRouter from './routes/cityRoutes';
+import cityRouter from './routes/cityRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
 import userRouter from './routes/userRoutes.js';
 

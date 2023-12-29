@@ -3,14 +3,11 @@ import type { Schema, Document, Model } from 'mongoose';
 
 export interface CategoryDraft extends Document {
   categoryName: string;
-  
 }
 
-const CategorySchema: Schema = new mongoose.Schema<CategoryDraft>(
-  {
-    categoryName: { type: String, required: true },
-  }
-);
+const CategorySchema: Schema = new mongoose.Schema<CategoryDraft>({
+  categoryName: { type: String, required: true },
+});
 
 export interface CategoryDocument extends CategoryDraft, Document {}
 

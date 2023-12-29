@@ -15,6 +15,7 @@ module.exports = {
     'no-var': 'error',
     semi: 'off',
     indent: ['error', 2, { SwitchCase: 1 }],
+    '@typescript-eslint/no-misused-promises': 'off',
     'no-multi-spaces': 'error',
     'space-in-parens': 'error',
     'no-multiple-empty-lines': 'error',
