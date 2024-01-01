@@ -1,11 +1,9 @@
 import type { Request, Response, NextFunction } from 'express';
-import Joi from 'joi';
+import type Joi from 'joi';
 
-type JoiSchema = Record<string, Joi.Schema>;
-
-export const validate = (schema: JoiSchema) => {
+export const validate = (schema: Joi.ObjectSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const { error } = Joi.object(schema).validate(req.body, { abortEarly: false });
+    const { error } = schema.validate(req.body, { abortEarly: false });
 
     if (error !== null && error !== undefined) {
       const errorMessage = error?.details.map((detail) => detail.message).join('; ');

@@ -22,5 +22,6 @@ module.exports = {
     'prefer-const': 'error',
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/object-curly-spacing': 'off',
+    "@typescript-eslint/strict-boolean-expressions": "off"
   },
 };

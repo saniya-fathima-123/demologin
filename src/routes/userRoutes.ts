@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import { validate } from '../middleware/ValidationMiddleware.js';
-import { createUserSchema } from '../schemas/UserControllerSchema.js';
+import { createOtpSchema, createUserSchema, loginSchema } from '../schemas/UserControllerSchema.js';
 import userController from '../controllers/UserController.js';
+import { authenticateJWT } from '../middleware/AuthMiddleware.js';
 
 const userRouter: Router = Router();
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-userRouter.get('/', userController.getUsers);
-userRouter.post('/register', validate(createUserSchema), userController.create); // POST request for creating a user registration
-// userRouter.post('/create-session', userController.otpgenerate);
-userRouter.post('/validate', userController.verifyOtp);
+userRouter.get('/', authenticateJWT, userController.getUsers);
+userRouter.post('/register', validate(createUserSchema), userController.create);
+userRouter.post('/login', validate(loginSchema), userController.login);
+userRouter.post('/otp', validate(createOtpSchema), userController.createSession);
 
 export default userRouter;

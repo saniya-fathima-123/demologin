@@ -37,7 +37,7 @@ class CategoryService {
     }
   }
 
-  public async updateCategory(id: string, categoryName: string): Promise<{ message: string; updatedCategory?: CategoryDocument | null }> {
+  public async updateCategory(id: string, categoryName: string): Promise<{ message: string; category?: CategoryDocument | null }> {
     try {
       // Find the category by ID
       const existingCategory = await Category.findById(id);
