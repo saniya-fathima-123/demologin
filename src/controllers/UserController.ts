@@ -6,7 +6,7 @@ class UserController {
     try {
       res.json({ test: 'hello' });
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(400).json({ error: error.message });
     }
   }
 
@@ -15,35 +15,35 @@ class UserController {
       const user = await UserService.createUser(req.body);
       res.status(201).json(user);
     } catch (error) {
-      res.status(400).send(error);
+      res.status(400).json({ error: error.message });
     }
   };
 
   login = async (req: Request, res: Response): Promise<void> => {
     try {
       const { mobileNumber, email, password, otp }: { mobileNumber: string; email: string; password: string; otp: string } = req.body;
-      let token: string = '';
+      let accessToken;
       if (email && password) {
-        token = await UserService.loginWithEmail({ email, password });
+        accessToken = await UserService.loginWithEmail({ email, password });
       } else if (mobileNumber && otp) {
-        token = await UserService.loginWithMobile({ mobileNumber, otp });
+        accessToken = await UserService.loginWithMobile({ mobileNumber, otp });
       } else {
         res.status(401).send('Unauthorized');
       }
 
-      res.status(201).json(token);
+      res.status(201).json(accessToken);
     } catch (error) {
-      res.status(400).send(error);
+      res.status(400).json({ error: error.message });
     }
   };
 
   async createSession(req: Request, res: Response): Promise<void> {
     try {
       const { mobileNumber } = req.body;
-      const otp = UserService.generateOtp(mobileNumber);
+      const otp = await UserService.generateOtp(mobileNumber);
       res.status(201).send(otp);
     } catch (error) {
-      res.status(400).json(error);
+      res.status(400).json({ error: error.message });
     }
   }
 }
