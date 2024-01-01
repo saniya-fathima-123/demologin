@@ -1,5 +1,12 @@
 import type { UserDocument, UserDraft } from '../models/User.js';
 import { User } from '../models/User.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { generate } from 'otp-generator';
+import { OneTimePassword, type OtpDocument } from '../models/Otp.js';
+import { SECRET_KEY } from '../middleware/AuthMiddleware.js';
+
+const TOKEN_EXPIRY_TIME = '2h';
 
 class UserService {
   public async createUser(userDraft: UserDraft): Promise<UserDocument> {
@@ -12,6 +19,48 @@ class UserService {
     const newRegistration = new User({ mobileNumber, firstName, lastName, email });
     // Save the registration to the database
     return await newRegistration.save();
+  }
+
+  public async generateOtp({ mobileNumber }: { mobileNumber: string }): Promise<OtpDocument> {
+    const user = await User.findOne<UserDocument>({ mobileNumber });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const OTP = generate(6, {
+      digits: true,
+      // upperCase: false,
+      specialChars: false,
+    });
+
+    const newOtp = new OneTimePassword({ mobileNumber, otp: OTP });
+    return await newOtp.save(); // Save the registration to the database
+  }
+
+  public async loginWithMobile({ mobileNumber, otp }: { mobileNumber: string; otp: string }): Promise<string> {
+    const user = await User.findOne<UserDocument>({ mobileNumber });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const otpRecord: OtpDocument | null = await OneTimePassword.findOne({ otp });
+    if (otpRecord !== null && otpRecord.otp !== otp) {
+      throw new Error('Invalid otp');
+    }
+    // Create JWT token upon successful login
+    return jwt.sign({ user }, SECRET_KEY, { expiresIn: TOKEN_EXPIRY_TIME });
+  }
+
+  public async loginWithEmail({ email, password }: { email: string; password: string }): Promise<string> {
+    const user = await User.findOne({ email });
+    if (!user || !user.password) {
+      throw new Error('User not found');
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      throw new Error('Invalid password');
+    }
+    // Create JWT token upon successful login
+    return jwt.sign({ user }, SECRET_KEY, { expiresIn: TOKEN_EXPIRY_TIME });
   }
 }
 

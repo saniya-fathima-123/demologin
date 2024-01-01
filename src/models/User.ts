@@ -41,8 +41,9 @@ import type { Schema, Document, Model } from 'mongoose';
 export interface UserDraft extends Document {
   firstName: string;
   lastName: string;
-  email: string;
-  mobileNumber: string;
+  email?: string;
+  password?: string;
+  mobileNumber?: string;
   role?: USER_ROLE;
   status?: USER_STATUS;
 }
@@ -61,8 +62,24 @@ const UserSchema: Schema = new mongoose.Schema<UserDraft>(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    mobileNumber: { type: String, required: true },
+    email: {
+      type: String,
+      required: function (this: UserDraft) {
+        return !this.mobileNumber; // Require email if mobile is not set
+      },
+    },
+    mobileNumber: {
+      type: String,
+      required: function (this: UserDraft) {
+        return !this.email; // Require mobileNumber if email is not set
+      },
+    },
+    password: {
+      type: String,
+      required: function (this: UserDraft) {
+        return !this.mobileNumber; // Require password if mobile is not set
+      },
+    },
     role: {
       type: String,
       required: true,
@@ -79,5 +96,12 @@ export interface UserDocument extends UserDraft, Document {}
 interface UserModel extends Model<UserDocument> {
   // Define static or instance methods for the model
 }
+
+UserSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    delete ret.password;
+    return ret;
+  },
+});
 
 export const User = mongoose.model<UserDraft, UserModel>('User', UserSchema); // Assign the result to UserModel
