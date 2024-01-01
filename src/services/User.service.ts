@@ -8,6 +8,9 @@ import { SECRET_KEY } from '../middleware/AuthMiddleware.js';
 
 const TOKEN_EXPIRY_TIME = '2h';
 
+export interface Token {
+  accessToken: string;
+}
 class UserService {
   public async createUser(userDraft: UserDraft): Promise<UserDocument> {
     const { mobileNumber, firstName, lastName, email } = userDraft;
@@ -21,23 +24,19 @@ class UserService {
     return await newRegistration.save();
   }
 
-  public async generateOtp({ mobileNumber }: { mobileNumber: string }): Promise<OtpDocument> {
+  public async generateOtp(mobileNumber: string): Promise<OtpDocument> {
     const user = await User.findOne<UserDocument>({ mobileNumber });
     if (!user) {
       throw new Error('User not found');
     }
 
-    const OTP = generate(6, {
-      digits: true,
-      // upperCase: false,
-      specialChars: false,
-    });
+    const OTP = generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
 
     const newOtp = new OneTimePassword({ mobileNumber, otp: OTP });
     return await newOtp.save(); // Save the registration to the database
   }
 
-  public async loginWithMobile({ mobileNumber, otp }: { mobileNumber: string; otp: string }): Promise<string> {
+  public async loginWithMobile({ mobileNumber, otp }: { mobileNumber: string; otp: string }): Promise<Token> {
     const user = await User.findOne<UserDocument>({ mobileNumber });
     if (!user) {
       throw new Error('User not found');
@@ -47,10 +46,11 @@ class UserService {
       throw new Error('Invalid otp');
     }
     // Create JWT token upon successful login
-    return jwt.sign({ user }, SECRET_KEY, { expiresIn: TOKEN_EXPIRY_TIME });
+    const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: TOKEN_EXPIRY_TIME });
+    return { accessToken: token };
   }
 
-  public async loginWithEmail({ email, password }: { email: string; password: string }): Promise<string> {
+  public async loginWithEmail({ email, password }: { email: string; password: string }): Promise<Token> {
     const user = await User.findOne({ email });
     if (!user || !user.password) {
       throw new Error('User not found');
@@ -60,7 +60,9 @@ class UserService {
       throw new Error('Invalid password');
     }
     // Create JWT token upon successful login
-    return jwt.sign({ user }, SECRET_KEY, { expiresIn: TOKEN_EXPIRY_TIME });
+    const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: TOKEN_EXPIRY_TIME });
+
+    return { accessToken: token };
   }
 }
 
