@@ -17,7 +17,7 @@ class UserService {
 
     const existingUser = await User.findOne<UserDocument>({ mobileNumber });
     if (existingUser !== null) {
-      throw new Error('User  email already exists.');
+      throw new Error('User email already exists.');
     }
     const newRegistration = new User({ mobileNumber, firstName, lastName, email });
     // Save the registration to the database
