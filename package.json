@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc && node dist/app.js",
-    "start": "nodemon -e ts  --exec \"npm run compile\"",
-    "dev": "nodemon ./src/app.ts",
+    "start": "node dist/app.js",
+    "dev": "nodemon -e ts --exec \"npm run compile\"",
     "build": "tsc --project ./tsconfig.json",
     "tsc:watch": "tsc --watch --project ./tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1",
