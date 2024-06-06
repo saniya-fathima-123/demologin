@@ -1,8 +1,6 @@
 import type { Request, Response } from 'express';
 import DriverService from '../services/Driver.service.js';
 import { Driver } from '../models/Driver.js';
-import { createDriverSchema } from '../schemas/DriverSchema.js';
-import { validate } from '../middleware/ValidationMiddleware';
 
 class DriverController {
   async getDriver(req: Request, res: Response): Promise<void> {
@@ -17,7 +15,6 @@ class DriverController {
 
   create = async (req: Request, res: Response): Promise<void> => {
     try {
-      validate(createDriverSchema)(req, res, () => {});
       const driver = await DriverService.createDriver(req.body);
       res.status(201).json(driver);
     } catch (error) {

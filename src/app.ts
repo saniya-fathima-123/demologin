@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cityRouter from './routes/cityRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import driverRouter from './routes/driverRoutes.js';
 
 class App {
   public app: Application;
@@ -19,8 +20,8 @@ class App {
       .catch((e) => {
         console.error('unable to connect');
       });
-    this.app.listen(3000, () => {
-      console.log(`Server is running on port ${3000}`);
+    this.app.listen(5000, () => {
+      console.log(`Server is running on port ${5000}`);
     });
   }
 
@@ -33,13 +34,13 @@ class App {
     this.app.use('/api/v1/category', categoryRouter);
     this.app.use('/api/v1/city', cityRouter);
     this.app.use('/api/v1/users', userRouter);
-    // this.app.use('/user', router);
-    // this.app.use('/user/login', router);
+    this.app.use('/api/v1/driver', driverRouter);
+
     // this.app.use('/user/loginverify', router);
   }
 
   private async connectToDatabase(): Promise<void> {
-    const MONGO_URI: string = 'mongodb+srv://ashishkumar:6xwy0z9WLmLi5MZi@cluster0.y1zfhr8.mongodb.net/?retryWrites=true&w=majority';
+    const MONGO_URI: string = 'mongodb+srv://saniyafathima:LYKhJwPC1d1s633Z@cluster0.piqskmz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
     await mongoose.connect(MONGO_URI);
   }
 }
