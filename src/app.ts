@@ -40,7 +40,7 @@ class App {
   }
 
   private async connectToDatabase(): Promise<void> {
-    const MONGO_URI: string = 'mongodb+srv://saniyafathima:qoR6dvVtoXb9nT7P@cluster0.piqskmz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+    const MONGO_URI: string = 'mongodb+srv://saniyafathima:eQ7kix203RsIlt7p@cluster0.piqskmz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
     await mongoose.connect(MONGO_URI);
   }
 }
