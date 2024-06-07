@@ -29,8 +29,18 @@ class App {
 
   private config(): void {
     this.app.use(express.json());
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: 'https://demologinfront.onrender.com',
+      })
+    );
     this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(function (req, res, next) {
+      res.header('Access-Control-Allow-Origin', 'https://demologinfront.onrender.com');
+      res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      next();
+    });
   }
 
   private routes(): void {
