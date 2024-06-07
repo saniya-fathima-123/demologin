@@ -5,6 +5,7 @@ import cityRouter from './routes/cityRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import driverRouter from './routes/driverRoutes.js';
+import cors from 'cors';
 
 class App {
   public app: Application;
@@ -13,6 +14,7 @@ class App {
     this.app = express();
     this.config();
     this.routes();
+
     this.connectToDatabase()
       .then(() => {
         console.log('Database connnected');
@@ -27,6 +29,7 @@ class App {
 
   private config(): void {
     this.app.use(express.json());
+    this.app.use(cors());
     this.app.use(express.urlencoded({ extended: false }));
   }
 
